@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Feliz Dia dos Namorados 💘</title>
   <link rel="shortcut icon" href="fotos/favicon (1).ico" type="image/x-icon">
   <style>
@@ -62,64 +65,6 @@
 
     .gallery-item:hover img {
       transform: scale(1.05);
-    }
-
-    .video-section {
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 20px;
-      padding: 30px 20px;
-      margin: 40px auto;
-      max-width: 1200px;
-    }
-
-    .video-section h2 {
-      color: #ff4d6d;
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    .video-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      padding: 20px;
-    }
-
-    .video-container {
-      position: relative;
-      overflow: hidden;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.2);
-      transition: transform 0.3s ease;
-      aspect-ratio: 9/16;
-    }
-
-    .video-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(255, 77, 109, 0.3);
-    }
-
-    .video-gallery video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .video-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-      color: white;
-      padding: 15px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .video-container:hover .video-overlay {
-      opacity: 1;
     }
 
     .button-surpresa {
@@ -222,21 +167,26 @@
     .custom-audio {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 10px;
       justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    audio {
+      max-width: 200px;
+      height: 40px;
     }
 
     .play-button {
       background-color: #ff4d6d;
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       font-size: 1.2em;
       color: white;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: all 0.3s;
     }
 
     .play-button:hover {
@@ -353,7 +303,7 @@
       border-radius: 10px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.2);
       z-index: 1000;
-      display: none; /* Inicialmente escondido */
+      display: none;
     }
     
     .qr-code {
@@ -383,11 +333,6 @@
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 10px;
         padding: 10px;
-      }
-      
-      .video-gallery {
-        grid-template-columns: 1fr;
-        gap: 15px;
       }
       
       .qr-code-container {
@@ -450,10 +395,12 @@
         </p>
 
         <div class="custom-audio">
+          <audio id="customAudio" controls>
+            <source src="audios/strangers-slowedreverbextended.mp3" type="audio/mpeg">
+            Seu navegador não suporta áudio HTML5
+          </audio>
           <button class="play-button" onclick="toggleCustomAudio()" id="playCustomBtn">▶️</button>
-          <span id="customAudioStatus">Tocar música</span>
         </div>
-        <audio id="customAudio" src="audios/strangers-slowedreverbextended.mp3"></audio>
         
         <p>
           💭 Depois vc falou que me amava quando a gente tava na rede e fiquei numa mistura de emoções por conta de toda essa história minha com meu pai 😞
@@ -575,10 +522,6 @@
     </div>
   </div>
 
-  
-
-
-
   <div class="final-message">
     <p>💖 Cada segundo ao seu lado é um presente que eu guardo com carinho no meu coração. Você transformou minha vida de uma maneira que eu nem sabia ser possível. Mal posso esperar para viver muitos outros Dias dos Namorados ao seu lado, criando memórias tão especiais quanto essas que registramos aqui. Te amo mais que strogonoff💖</p>
     
@@ -624,32 +567,33 @@
       container.scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Controle de áudio
-    const customAudio = document.getElementById("customAudio");
-    const playBtn = document.getElementById("playCustomBtn");
-    const statusText = document.getElementById("customAudioStatus");
-
+    // Controle de áudio otimizado para mobile
     function toggleCustomAudio() {
-      if (customAudio.paused) {
-        customAudio.play();
-        playBtn.textContent = "⏸️";
-        statusText.textContent = "Tocando...";
+      const audio = document.getElementById("customAudio");
+      const btn = document.getElementById("playCustomBtn");
+      
+      if (audio.paused) {
+        // Inicia com clique explícito do usuário
+        audio.play()
+          .then(() => {
+            btn.textContent = "⏸️";
+          })
+          .catch(error => {
+            console.error("Erro ao reproduzir:", error);
+            // Mostra alerta se necessário
+            alert("Toque na tela primeiro para permitir o áudio, depois no botão play!");
+          });
       } else {
-        customAudio.pause();
-        playBtn.textContent = "▶️";
-        statusText.textContent = "Tocar música";
+        audio.pause();
+        btn.textContent = "▶️";
       }
     }
 
-    // Pausar vídeos quando outro é reproduzido
-    document.querySelectorAll('video').forEach(video => {
-      video.addEventListener('play', () => {
-        document.querySelectorAll('video').forEach(otherVideo => {
-          if (otherVideo !== video && !otherVideo.paused) {
-            otherVideo.pause();
-          }
-        });
-      });
+    // Pré-carrega o áudio quando a página é carregada
+    document.addEventListener('DOMContentLoaded', function() {
+      const audio = document.getElementById("customAudio");
+      audio.volume = 0.5; // Define volume médio
+      audio.load(); // Pré-carrega o áudio
     });
 
     // Controle do QR Code
@@ -689,12 +633,6 @@
       // Mostra o botão do QR Code apenas em mobile
       if (isMobile) {
         document.querySelector('.qr-toggle').style.display = 'block';
-        
-        // Adiciona playsinline para vídeos no iOS
-        document.querySelectorAll('video').forEach(video => {
-          video.setAttribute('playsinline', '');
-          video.setAttribute('webkit-playsinline', '');
-        });
       }
     });
   </script>
